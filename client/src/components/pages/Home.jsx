@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Container = styled.div`
   //border: 5px solid #1687a7;
@@ -64,11 +65,26 @@ const SendButton = styled.input`
 `;
 
 function Home() {
+  const [textInput, setTextInput] = useState('');
+  const [name, setName] = useState('');
+  const [sender, setSender] = useState('Sim');
+
+  function sendThankYou(e) {
+    e.preventDefault();
+    axios.post('/', { textInput, name, sender })
+      .then((response) => {
+        console.log('email req sent', response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <Container>
-      <FormContainer>
-        <SearchBar type="text" placeholder="Search a name" />
-        <TextBox type="text" placeholder="Enter your note" />
+      <FormContainer onSubmit={(e) => { sendThankYou(e); }}>
+        <SearchBar type="text" placeholder="Search a name" onChange={(e) => { setName(e.target.value); }} />
+        <TextBox type="text" placeholder="Enter your note" onChange={(e) => { setTextInput(e.target.value); }} />
         <ButtonsContainer>
           <DraftButton type="submit" value="Save as Draft" />
           <SendButton type="submit" value="Send" />
