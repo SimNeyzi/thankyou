@@ -1,79 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
 const Container = styled.div`
   //border: 5px solid #1687a7;
-  display: flex;
-  width: 100%;
-  height: 100vh;
 `;
 
 const FormContainer = styled.form`
-  border: 5px solid #1687a7;
+  //border: 5px solid red;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  flex-flow: center;
+  align-items: start;
+  // flex-flow: center;
   box-sizing: border-box;
-  width: 50%;
-  height: 50%;
-  margin: auto;
-  padding: 10px;
-`;
-
-const SearchBar = styled.input`
-  width: 80%;
-  box-sizing: border-box;
-  //margin: auto;
-  margin-top: 10px;
-  padding: 10px;
-`;
-
-const TextBox = styled.input`
-  width: 80%;
-  box-sizing: border-box;
-  margin-top: 20px;
-  padding: 10px;
-  height: 50%;
-`;
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  flex-flow: center;
-  box-sizing: border-box;
-  width: 50%;
-  margin: auto;
-  padding: 10px;
-  justify-content: space-between;
-`;
-
-const DraftButton = styled.input`
-  border-radius: 20px;
-  width: 70%;
-  background-color: #f4f5f7;
-  padding: 10px;
-  margin: 10px;
-`;
-
-const SendButton = styled.input`
-  border-radius: 20px;
-  width: 70%;
-  background-color: #f4f5f7;
-  padding: 10px;
-  margin: 10px;
 `;
 
 function Home() {
   const [textInput, setTextInput] = useState('');
-  const [name, setName] = useState('');
-  const [sender, setSender] = useState('Sim');
+  const [receiver, setReceiver] = useState('');
+  const [sender, setSender] = useState('John Doe');
 
   function sendThankYou(e) {
     e.preventDefault();
-    axios.post('/', { textInput, name, sender })
-      .then((response) => {
-        console.log('email req sent', response);
+    axios.post('/', { textInput, receiver, sender })
+      .then(() => {
+        setReceiver('');
+        setTextInput('');
       })
       .catch((error) => {
         console.log(error);
@@ -81,15 +33,18 @@ function Home() {
   }
 
   return (
-    <Container>
-      <FormContainer onSubmit={(e) => { sendThankYou(e); }}>
-        <SearchBar type="text" placeholder="Search a name" onChange={(e) => { setName(e.target.value); }} />
-        <TextBox type="text" placeholder="Enter your note" onChange={(e) => { setTextInput(e.target.value); }} />
-        <ButtonsContainer>
-          <DraftButton type="submit" value="Save as Draft" />
-          <SendButton type="submit" value="Send" />
-        </ButtonsContainer>
+    <Container className="section m-0">
+
+      <FormContainer className="container m-0 p-0" onSubmit={(e) => { sendThankYou(e); }}>
+
+        <input className="input is-medium p-2 mt-4" type="text" placeholder="Search a name" value={receiver} onChange={(e) => { setReceiver(e.target.value); }} />
+
+        <textarea className="textarea is-medium p-2 mt-4" type="text" placeholder="Enter your note" value={textInput} onChange={(e) => { setTextInput(e.target.value); }} />
+
+        <button className="button is-success is-light is-medium is-fullwidth is-rounded is-focused p-4 mt-4 has-text-centered" type="submit">Send</button>
+
       </FormContainer>
+
     </Container>
   );
 }
